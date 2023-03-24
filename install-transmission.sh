@@ -1,5 +1,4 @@
 #!/bin/bash
-#!/bin/bash
 
 # get the regular username
 if [[ -z "${SUDO_USER}" ]]; then
