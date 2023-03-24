@@ -16,8 +16,6 @@ fi
 user_name=$1
 user_password=$2
 
-# add user to debian-transmission group
-sudo usermod -a -G debian-transmission "$username" || exit 1
 
 # create downloads directory if it doesn't exist
 if [ ! -d "/home/$username/downloads" ]; then
@@ -26,7 +24,19 @@ else
     echo "Downloads directory already exists"
 fi
 
+# update apt repositories
+apt update || exit 1
+
+# install transmission-daemon
+apt install transmission-daemon -y || exit 1
+
+# stop transmission-daemon service
+service transmission-daemon stop || exit 1
+
+
+# add user to debian-transmission group
 # set the group ownership to debian-transmission and permissions to 770
+sudo usermod -a -G debian-transmission "$username" || exit 1
 sudo chgrp debian-transmission "/home/$username/downloads" || exit 1
 sudo chmod 770 "/home/$username/downloads" || exit 1
 
